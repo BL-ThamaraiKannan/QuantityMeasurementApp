@@ -6,7 +6,9 @@ public class QuantityMeasurementApp {
     public enum LengthUnit {
 
         FEET(1.0),
-        INCH(1.0 / 12.0);
+        INCHES(1.0 / 12.0),
+        YARDS(3.0),
+        CENTIMETERS(0.0328084);
 
         private final double conversionFactor;
 
@@ -57,8 +59,10 @@ public class QuantityMeasurementApp {
 
             QuantityLength other = (QuantityLength) obj;
 
-            // Compare converted values
-            return Double.compare(this.toFeet(), other.toFeet()) == 0;
+            // Tolerance for floating point precision
+            double EPSILON = 0.0001;
+
+            return Math.abs(this.toFeet() - other.toFeet()) < EPSILON;
         }
 
         @Override
@@ -70,36 +74,64 @@ public class QuantityMeasurementApp {
     // Main Method
     public static void main(String[] args) {
 
-        // 1 feet == 12 inches
+        QuantityLength yard =
+                new QuantityLength(1.0, LengthUnit.YARDS);
+
         QuantityLength feet =
-                new QuantityLength(1.0, LengthUnit.FEET);
-
-        QuantityLength inches =
-                new QuantityLength(12.0, LengthUnit.INCH);
-
-        boolean result1 = feet.equals(inches);
+                new QuantityLength(3.0, LengthUnit.FEET);
 
         System.out.println(
-                "Input: Quantity(1.0, \"feet\") and Quantity(12.0, \"inches\")"
+                "Input: Quantity(1.0, YARDS) and Quantity(3.0, FEET)"
         );
 
-        System.out.println("Output: Equal (" + result1 + ")");
+        System.out.println(
+                "Output: Equal (" + yard.equals(feet) + ")"
+        );
 
         System.out.println();
 
-        // Same inch comparison
-        QuantityLength inch1 =
-                new QuantityLength(1.0, LengthUnit.INCH);
+        QuantityLength yardToInch =
+                new QuantityLength(1.0, LengthUnit.YARDS);
 
-        QuantityLength inch2 =
-                new QuantityLength(1.0, LengthUnit.INCH);
-
-        boolean result2 = inch1.equals(inch2);
+        QuantityLength inches =
+                new QuantityLength(36.0, LengthUnit.INCHES);
 
         System.out.println(
-                "Input: Quantity(1.0, \"inch\") and Quantity(1.0, \"inch\")"
+                "Input: Quantity(1.0, YARDS) and Quantity(36.0, INCHES)"
         );
 
-        System.out.println("Output: Equal (" + result2 + ")");
+        System.out.println(
+                "Output: Equal (" + yardToInch.equals(inches) + ")"
+        );
+
+        System.out.println();
+
+        QuantityLength cm1 =
+                new QuantityLength(2.0, LengthUnit.CENTIMETERS);
+
+        QuantityLength cm2 =
+                new QuantityLength(2.0, LengthUnit.CENTIMETERS);
+
+        System.out.println(
+                "Input: Quantity(2.0, CENTIMETERS) and Quantity(2.0, CENTIMETERS)"
+        );
+
+        System.out.println(
+                "Output: Equal (" + cm1.equals(cm2) + ")"
+        );
+
+        System.out.println();
+
+        QuantityLength cm =
+                new QuantityLength(1.0, LengthUnit.CENTIMETERS);
+
+        QuantityLength inch =
+                new QuantityLength(0.393701, LengthUnit.INCHES);
+
+        System.out.println(
+                "Input: Quantity(1.0, CENTIMETERS) and Quantity(0.393701, INCHES)"
+        );
+
+        System.out.println("Output: Equal (" + cm.equals(inch) + ")");
     }
 }
