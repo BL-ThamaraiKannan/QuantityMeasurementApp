@@ -2,88 +2,112 @@ package com.src.main;
 
 public class QuantityMeasurementApp {
 
+    // Generic Equality Demonstration
+    public static <U extends IMeasurable>
+    void demonstrateEquality(
+            Quantity<U> first,
+            Quantity<U> second
+    ) {
+
+        System.out.println(
+                first + ".equals(" +
+                        second + ") => " +
+                        first.equals(second)
+        );
+
+        System.out.println();
+    }
+
+    // Generic Conversion Demonstration
+    public static <U extends IMeasurable>
+    void demonstrateConversion(
+            Quantity<U> quantity,
+            U targetUnit
+    ) {
+
+        System.out.println(
+                quantity + ".convertTo(" +
+                        targetUnit + ") => " +
+                        quantity.convertTo(targetUnit)
+        );
+
+        System.out.println();
+    }
+
+    // Generic Addition Demonstration
+    public static <U extends IMeasurable>
+    void demonstrateAddition(
+            Quantity<U> first,
+            Quantity<U> second,
+            U targetUnit
+    ) {
+
+        System.out.println(
+                first + ".add(" +
+                        second + ", " +
+                        targetUnit + ") => " +
+                        first.add(second, targetUnit)
+        );
+
+        System.out.println();
+    }
+
+    // Main Method
     public static void main(String[] args) {
 
-        // Equality
-        System.out.println(
-                "Input: Quantity(1.0, KILOGRAM).equals(Quantity(1000.0, GRAM))"
+        // Length
+        Quantity<LengthUnit> feet =
+                new Quantity<>(
+                        1.0,
+                        LengthUnit.FEET
+                );
+
+        Quantity<LengthUnit> inches =
+                new Quantity<>(
+                        12.0,
+                        LengthUnit.INCHES
+                );
+
+        demonstrateEquality(feet, inches);
+
+        demonstrateConversion(
+                feet,
+                LengthUnit.INCHES
         );
 
-        System.out.println(
-                "Output: " +
-                        new QuantityWeight(
-                                1.0,
-                                WeightUnit.KILOGRAM
-                        ).equals(
-                                new QuantityWeight(
-                                        1000.0,
-                                        WeightUnit.GRAM
-                                )
-                        )
+        demonstrateAddition(
+                feet,
+                inches,
+                LengthUnit.FEET
         );
 
-        System.out.println();
-
-        // Conversion
-        QuantityWeight converted =
-                new QuantityWeight(
+        // Weight
+        Quantity<WeightUnit> kilogram =
+                new Quantity<>(
                         1.0,
                         WeightUnit.KILOGRAM
-                ).convertTo(
+                );
+
+        Quantity<WeightUnit> gram =
+                new Quantity<>(
+                        1000.0,
                         WeightUnit.GRAM
                 );
 
-        System.out.println(
-                "Input: Quantity(1.0, KILOGRAM).convertTo(GRAM)"
+        demonstrateEquality(
+                kilogram,
+                gram
         );
 
-        System.out.println(
-                "Output: " + converted
+        demonstrateConversion(
+                kilogram,
+                WeightUnit.GRAM
         );
 
-        System.out.println();
-
-        // Addition
-        QuantityWeight addition =
-                new QuantityWeight(
-                        1.0,
-                        WeightUnit.KILOGRAM
-                ).add(
-                        new QuantityWeight(
-                                1000.0,
-                                WeightUnit.GRAM
-                        )
-                );
-
-        System.out.println(
-                "Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM))"
-        );
-
-        System.out.println(
-                "Output: " + addition
-        );
-
-        System.out.println();
-
-        // Addition with target unit
-        QuantityWeight targetAddition =
-                new QuantityWeight(
-                        1.0,
-                        WeightUnit.KILOGRAM
-                ).add(
-                        new QuantityWeight(
-                                1000.0,
-                                WeightUnit.GRAM
-                        ),
-                        WeightUnit.GRAM
-                );
-
-        System.out.println(
-                "Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM), GRAM)"
-        );
-
-        System.out.println(
-                "Output: " + targetAddition
+        demonstrateAddition(
+                kilogram,
+                gram,
+                WeightUnit.KILOGRAM
         );
     }
 }
