@@ -1,7 +1,27 @@
 package com.src.main;
+
 public class QuantityMeasurementApp {
 
-    // Subtraction Demo
+    public static <U extends IMeasurable>
+    void demonstrateAddition(
+            Quantity<U> first,
+            Quantity<U> second,
+            U targetUnit
+    ) {
+
+        System.out.println(
+                first + ".add(" +
+                        second + ", " +
+                        targetUnit + ") => " +
+                        first.add(
+                                second,
+                                targetUnit
+                        )
+        );
+
+        System.out.println();
+    }
+
     public static <U extends IMeasurable>
     void demonstrateSubtraction(
             Quantity<U> first,
@@ -22,7 +42,6 @@ public class QuantityMeasurementApp {
         System.out.println();
     }
 
-    // Division Demo
     public static <U extends IMeasurable>
     void demonstrateDivision(
             Quantity<U> first,
@@ -40,7 +59,20 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // Length Subtraction
+        // Addition
+        demonstrateAddition(
+                new Quantity<>(
+                        1.0,
+                        LengthUnit.FEET
+                ),
+                new Quantity<>(
+                        12.0,
+                        LengthUnit.INCHES
+                ),
+                LengthUnit.FEET
+        );
+
+        // Subtraction
         demonstrateSubtraction(
                 new Quantity<>(
                         10.0,
@@ -53,44 +85,7 @@ public class QuantityMeasurementApp {
                 LengthUnit.FEET
         );
 
-        // Weight Subtraction
-        demonstrateSubtraction(
-                new Quantity<>(
-                        10.0,
-                        WeightUnit.KILOGRAM
-                ),
-                new Quantity<>(
-                        5000.0,
-                        WeightUnit.GRAM
-                ),
-                WeightUnit.KILOGRAM
-        );
-
-        // Volume Subtraction
-        demonstrateSubtraction(
-                new Quantity<>(
-                        5.0,
-                        VolumeUnit.LITRE
-                ),
-                new Quantity<>(
-                        500.0,
-                        VolumeUnit.MILLILITRE
-                ),
-                VolumeUnit.LITRE
-        );
-
-        // Division Operations
-        demonstrateDivision(
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET
-                ),
-                new Quantity<>(
-                        2.0,
-                        LengthUnit.FEET
-                )
-        );
-
+        // Division
         demonstrateDivision(
                 new Quantity<>(
                         24.0,
@@ -102,15 +97,30 @@ public class QuantityMeasurementApp {
                 )
         );
 
-        demonstrateDivision(
+        // Weight Example
+        demonstrateAddition(
                 new Quantity<>(
                         10.0,
                         WeightUnit.KILOGRAM
                 ),
                 new Quantity<>(
+                        5000.0,
+                        WeightUnit.GRAM
+                ),
+                WeightUnit.GRAM
+        );
+
+        // Volume Example
+        demonstrateSubtraction(
+                new Quantity<>(
                         5.0,
-                        WeightUnit.KILOGRAM
-                )
+                        VolumeUnit.LITRE
+                ),
+                new Quantity<>(
+                        2.0,
+                        VolumeUnit.LITRE
+                ),
+                VolumeUnit.MILLILITRE
         );
     }
 }
