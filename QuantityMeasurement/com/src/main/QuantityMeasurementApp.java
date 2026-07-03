@@ -1,82 +1,89 @@
 package com.src.main;
+
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // Conversion
-        QuantityLength feet =
-                new QuantityLength(
-                        1.0,
-                        LengthUnit.FEET
-                );
-
+        // Equality
         System.out.println(
-                "Input: Quantity(1.0, FEET).convertTo(INCHES)"
+                "Input: Quantity(1.0, KILOGRAM).equals(Quantity(1000.0, GRAM))"
         );
 
         System.out.println(
                 "Output: " +
-                        feet.convertTo(
-                                LengthUnit.INCHES
+                        new QuantityWeight(
+                                1.0,
+                                WeightUnit.KILOGRAM
+                        ).equals(
+                                new QuantityWeight(
+                                        1000.0,
+                                        WeightUnit.GRAM
+                                )
                         )
+        );
+
+        System.out.println();
+
+        // Conversion
+        QuantityWeight converted =
+                new QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM
+                ).convertTo(
+                        WeightUnit.GRAM
+                );
+
+        System.out.println(
+                "Input: Quantity(1.0, KILOGRAM).convertTo(GRAM)"
+        );
+
+        System.out.println(
+                "Output: " + converted
         );
 
         System.out.println();
 
         // Addition
-        QuantityLength result =
-                new QuantityLength(
+        QuantityWeight addition =
+                new QuantityWeight(
                         1.0,
-                        LengthUnit.FEET
+                        WeightUnit.KILOGRAM
                 ).add(
-                        new QuantityLength(
-                                12.0,
-                                LengthUnit.INCHES
-                        ),
-                        LengthUnit.FEET
-                );
-
-        System.out.println(
-                "Input: Quantity(1.0, FEET).add(Quantity(12.0, INCHES), FEET)"
-        );
-
-        System.out.println(
-                "Output: " + result
-        );
-
-        System.out.println();
-
-        // Equality
-        boolean equality =
-                new QuantityLength(
-                        36.0,
-                        LengthUnit.INCHES
-                ).equals(
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.YARDS
+                        new QuantityWeight(
+                                1000.0,
+                                WeightUnit.GRAM
                         )
                 );
 
         System.out.println(
-                "Input: Quantity(36.0, INCHES).equals(Quantity(1.0, YARDS))"
+                "Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM))"
         );
 
         System.out.println(
-                "Output: " + equality
+                "Output: " + addition
         );
 
         System.out.println();
 
-        // Base Unit Conversion
+        // Addition with target unit
+        QuantityWeight targetAddition =
+                new QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM
+                ).add(
+                        new QuantityWeight(
+                                1000.0,
+                                WeightUnit.GRAM
+                        ),
+                        WeightUnit.GRAM
+                );
+
         System.out.println(
-                "Input: LengthUnit.INCHES.convertToBaseUnit(12.0)"
+                "Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM), GRAM)"
         );
 
         System.out.println(
-                "Output: " +
-                        LengthUnit.INCHES
-                                .convertToBaseUnit(12.0)
+                "Output: " + targetAddition
         );
     }
 }
