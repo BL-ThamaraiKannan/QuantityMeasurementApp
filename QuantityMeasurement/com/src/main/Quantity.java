@@ -1,5 +1,4 @@
 package com.src.main;
-
 public class Quantity<U extends IMeasurable> {
 
     private static final double EPSILON = 0.0001;
@@ -38,14 +37,10 @@ public class Quantity<U extends IMeasurable> {
         return unit;
     }
 
-    // Convert to target unit
+    // Convert
     public Quantity<U> convertTo(U targetUnit) {
 
-        if (targetUnit == null) {
-            throw new IllegalArgumentException(
-                    "Target unit cannot be null"
-            );
-        }
+        validateTargetUnit(targetUnit);
 
         double baseValue =
                 unit.convertToBaseUnit(value);
@@ -61,7 +56,7 @@ public class Quantity<U extends IMeasurable> {
         );
     }
 
-    // Add with default target unit
+    // Addition
     public Quantity<U> add(
             Quantity<U> other
     ) {
@@ -69,44 +64,117 @@ public class Quantity<U extends IMeasurable> {
         return add(other, this.unit);
     }
 
-    // Add with explicit target unit
     public Quantity<U> add(
             Quantity<U> other,
             U targetUnit
     ) {
 
-        if (other == null) {
-            throw new IllegalArgumentException(
-                    "Other quantity cannot be null"
+        validateOperand(other);
+        validateTargetUnit(targetUnit);
+
+        double result =
+                unit.convertToBaseUnit(value)
+                        + other.unit.convertToBaseUnit(
+                        other.value
+                );
+
+        double converted =
+                targetUnit.convertFromBaseUnit(
+                        result
+                );
+
+        return new Quantity<>(
+                round(converted),
+                targetUnit
+        );
+    }
+
+    // UC12 Subtraction
+    public Quantity<U> subtract(
+            Quantity<U> other
+    ) {
+
+        return subtract(other, this.unit);
+    }
+
+    public Quantity<U> subtract(
+            Quantity<U> other,
+            U targetUnit
+    ) {
+
+        validateOperand(other);
+        validateTargetUnit(targetUnit);
+
+        double result =
+                unit.convertToBaseUnit(value)
+                        - other.unit.convertToBaseUnit(
+                        other.value
+                );
+
+        double converted =
+                targetUnit.convertFromBaseUnit(
+                        result
+                );
+
+        return new Quantity<>(
+                round(converted),
+                targetUnit
+        );
+    }
+
+    // UC12 Division
+    public double divide(
+            Quantity<U> other
+    ) {
+
+        validateOperand(other);
+
+        double divisor =
+                other.unit.convertToBaseUnit(
+                        other.value
+                );
+
+        if (Math.abs(divisor) < EPSILON) {
+            throw new ArithmeticException(
+                    "Division by zero"
             );
         }
+
+        double dividend =
+                unit.convertToBaseUnit(value);
+
+        return dividend / divisor;
+    }
+
+    // Validation
+    private void validateOperand(
+            Quantity<U> other
+    ) {
+
+        if (other == null) {
+            throw new IllegalArgumentException(
+                    "Operand cannot be null"
+            );
+        }
+
+        if (unit.getClass()
+                != other.unit.getClass()) {
+
+            throw new IllegalArgumentException(
+                    "Cross-category operation not allowed"
+            );
+        }
+    }
+
+    private void validateTargetUnit(
+            U targetUnit
+    ) {
 
         if (targetUnit == null) {
             throw new IllegalArgumentException(
                     "Target unit cannot be null"
             );
         }
-
-        double firstBase =
-                unit.convertToBaseUnit(value);
-
-        double secondBase =
-                other.unit.convertToBaseUnit(
-                        other.value
-                );
-
-        double totalBase =
-                firstBase + secondBase;
-
-        double result =
-                targetUnit.convertFromBaseUnit(
-                        totalBase
-                );
-
-        return new Quantity<>(
-                round(result),
-                targetUnit
-        );
     }
 
     // Equality
@@ -125,9 +193,8 @@ public class Quantity<U extends IMeasurable> {
         Quantity<?> other =
                 (Quantity<?>) obj;
 
-        // Prevent cross-category comparison
-        if (this.unit.getClass() !=
-                other.unit.getClass()) {
+        if (unit.getClass()
+                != other.unit.getClass()) {
             return false;
         }
 
@@ -147,11 +214,11 @@ public class Quantity<U extends IMeasurable> {
     @Override
     public int hashCode() {
 
-        double baseValue =
+        double base =
                 unit.convertToBaseUnit(value);
 
         return Double.hashCode(
-                round(baseValue)
+                round(base)
         );
     }
 
