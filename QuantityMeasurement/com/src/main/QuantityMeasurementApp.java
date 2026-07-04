@@ -122,5 +122,24 @@ public class QuantityMeasurementApp {
                 ),
                 VolumeUnit.MILLILITRE
         );
+
+        System.out.println(
+                new Quantity<>(0.0, TemperatureUnit.CELSIUS)
+                        .equals(new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT))
+        );
+
+        // Conversion
+        System.out.println(
+                new Quantity<>(100.0, TemperatureUnit.CELSIUS)
+                        .convertTo(TemperatureUnit.FAHRENHEIT)
+        );
+
+        // Unsupported Operation
+        try {
+            new Quantity<>(100.0, TemperatureUnit.CELSIUS)
+                    .add(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
