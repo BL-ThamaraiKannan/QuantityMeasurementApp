@@ -1,8 +1,5 @@
 package com.src.test;
-import com.src.main.LengthUnit;
-import com.src.main.Quantity;
-import com.src.main.VolumeUnit;
-import com.src.main.WeightUnit;
+import com.src.main.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -378,6 +375,34 @@ public class QuantityMeasurementAppTest {
                 VolumeUnit.GALLON
                         .convertFromBaseUnit(3.78541),
                 EPSILON
+        );
+    }
+
+    @Test
+    public void testTemperatureEquality_CelsiusToFahrenheit() {
+
+        assertTrue(
+                new Quantity<>(0.0, TemperatureUnit.CELSIUS)
+                        .equals(new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT))
+        );
+    }
+
+    @Test
+    public void testTemperatureConversion() {
+
+        Quantity<TemperatureUnit> result =
+                new Quantity<>(100.0, TemperatureUnit.CELSIUS)
+                        .convertTo(TemperatureUnit.FAHRENHEIT);
+
+        assertEquals(212.0, result.getValue(), 0.01);
+    }
+
+    @Test
+    public void testTemperatureVsLength_NotEqual() {
+
+        assertFalse(
+                new Quantity<>(100.0, TemperatureUnit.CELSIUS)
+                        .equals(new Quantity<>(100.0, LengthUnit.FEET))
         );
     }
 }
