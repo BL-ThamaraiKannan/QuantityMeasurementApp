@@ -6,21 +6,6 @@ arithmetic operations, and a fully layered REST API — built incrementally acro
 
 ---
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Use Cases & Feature Progression](#use-cases--feature-progression)
-- [Core Design: Generic Quantity Class](#core-design-generic-quantity-class)
-- [Supported Units](#supported-units)
-- [REST API Endpoints (UC17)](#rest-api-endpoints-uc17)
-- [Getting Started](#getting-started)
-- [Running Tests](#running-tests)
-
----
-
 ## Overview
 
 The **Quantity Measurement App** is a Java project developed incrementally to
@@ -135,93 +120,6 @@ QuantityMeasurementApp/
             └── controller/QuantityMeasurementControllerTest.java
 ```
 
----
-
-## Use Cases & Feature Progression
-
-| UC | Branch | Type | Description |
-|---|---|---|---|
-| UC1 | `feature/uc1-feet-equality` | feat | Feet measurement equality |
-| UC2 | `feature/uc2-feet-inch-equality` | feat | Feet and inches measurement equality |
-| UC3 | `feature/uc3-generic-quantity-class` | feat | Generic `Quantity<U>` class for DRY principle |
-| UC4 | `feature/uc4-extended-unit-support` | feat | Extended unit support (yard, cm) |
-| UC5 | `feature/uc5-unit-conversion-support` | feat | Unit-to-unit conversion (same measurement type) |
-| UC6 | `feature/uc6-length-addition` | feat | Addition of two length units |
-| UC7 | `feature/uc7-explicit-target-unit-addition` | feat | Addition with explicit target unit |
-| UC8 | `feature/uc8-standalone-lengthunit-refactor` | refactor | Refactor `Unit` enum to standalone with conversions |
-| UC9 | `feature/uc9-weight-measurement-support` | feat | Weight measurement — equality, conversion, addition |
-| UC10 | `feature/uc10-generic-quantity-architecture` | feat | Generic `Quantity` class with `Unit` interface for multiple measurement types |
-| UC11 | `feature/uc11-volume-measurement-support` | feat | Volume measurement — equality, conversion, addition |
-| UC12 | `feature/uc12-subtraction-division-operations` | feat | Subtraction and division on `Quantity` objects |
-| UC13 | `feature/uc13-centralized-arithmetic-logic` | refactor | Centralized arithmetic logic to enforce DRY |
-| UC14 | `feature/uc14-temperature-support-with-optional-arithmetic` | feat | Temperature measurement with selective arithmetic support |
-| UC15 | `feature/uc15-n-tier-architecture-refactor` | refactor | N-Tier architecture refactoring |
-| UC16 | `feature/uc16-database-layer-jdbc` | feat | Database integration with JDBC for persistence |
-| UC17 | `feature/uc17-spring-framework-integration` | feat | Spring Boot REST API — services, JPA, and security |
-
----
-
-## Core Design: Generic Quantity Class
-
-The heart of the application is the `Quantity<U extends IMeasurable>` generic class,
-which provides a type-safe, unit-aware container for any measurable value:
-
-```java
-// IMeasurable — the unit contract
-public interface IMeasurable {
-    double toBase(double value);
-    double fromBase(double value);
-    interface SupportsArithmetic { boolean isSupported(); }
-}
-
-// Generic Quantity — works for Length, Weight, Volume
-Quantity<LengthUnit> oneFoot  = new Quantity<>(1.0, LengthUnit.FEET);
-Quantity<LengthUnit> twelveInches = new Quantity<>(12.0, LengthUnit.INCH);
-
-// Equality via base-unit conversion
-oneFoot.equals(twelveInches); // true
-
-// Arithmetic
-Quantity<LengthUnit> sum = oneFoot.add(twelveInches, LengthUnit.INCH); // 24.0 INCH
-
-// Centralized arithmetic operations (UC13)
-// ADD, SUBTRACT, DIVIDE — all via ArithmeticOperation enum with DoubleBinaryOperator
-```
-
----
-
-## Supported Units
-
-### Length
-| Unit | Symbol | Conversion to Base (INCH) |
-|---|---|---|
-| `INCH` | in | 1.0× |
-| `FEET` | ft | 12.0× |
-| `YARD` | yd | 36.0× |
-| `CENTIMETER` | cm | 0.4× |
-
-### Weight
-| Unit | Symbol | Conversion to Base (GRAM) |
-|---|---|---|
-| `GRAM` | g | 1.0× |
-| `KILOGRAM` | kg | 1000.0× |
-| `TONNE` | t | 1,000,000.0× |
-
-### Volume
-| Unit | Symbol | Conversion to Base (ML) |
-|---|---|---|
-| `MILLILITER` | mL | 1.0× |
-| `LITRE` | L | 1000.0× |
-| `GALLON` | gal | 3785.41× |
-
-### Temperature
-| Unit | Formula to Celsius (base) | Notes |
-|---|---|---|
-| `CELSIUS` | identity | Arithmetic not supported |
-| `FAHRENHEIT` | `(F − 32) × 5/9` | Arithmetic not supported |
-
----
-
 ## REST API Endpoints (UC17)
 
 Base URL: `http://localhost:8080`
@@ -287,7 +185,7 @@ auto-initialized on startup.
 ```
 URL:      http://localhost:8080/h2-console
 JDBC URL: jdbc:h2:mem:quantitymeasurementdb
-Username: sa
+Username: xyz
 Password: (leave blank)
 ```
 
@@ -329,6 +227,3 @@ main  ←── dev  ←── feature/ucN-*
 - `feature/ucN-*`: individual use-case branches (one per UC)
 
 ---
-
-> Built with clean-code principles, progressive refactoring, and industry-standard
-> Conventional Commits across 36 commits and 19 branches.
